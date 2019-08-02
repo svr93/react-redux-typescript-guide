@@ -206,7 +206,7 @@ const handleChange = (ev: React.MouseEvent<HTMLDivElement>) => { ... }
 ```tsx
 import * as React from 'react';
 
-type Props = {
+export type Props = {
   label: string;
   count: number;
   onIncrement: () => void;
@@ -490,7 +490,6 @@ Adds state to a stateless counter
 
 ```tsx
 import * as React from 'react';
-import { Subtract } from 'utility-types';
 
 // These props will be subtracted from base component props
 interface InjectedProps {
@@ -498,21 +497,22 @@ interface InjectedProps {
   onIncrement: () => void;
 }
 
-export const withState = <BaseProps extends InjectedProps>(
-  _BaseComponent: React.ComponentType<BaseProps>
-) => {
-  // fix for TypeScript issues: https://github.com/piotrwitek/react-redux-typescript-guide/issues/111
-  const BaseComponent = _BaseComponent as React.ComponentType<InjectedProps>;
+type HocProps = {
+  // here you can extend hoc with new props
+  initialCount?: number;
+};
 
-  type HocProps = Subtract<BaseProps, InjectedProps> & {
-    // here you can extend hoc with new props
-    initialCount?: number;
-  };
+export type OutputProps<WrappedComponentProps> = Omit<WrappedComponentProps, keyof InjectedProps> & HocProps;
+
+export function withState<AdditionalProps extends Record<string, unknown>>(
+  BaseComponent: React.ComponentType<AdditionalProps & InjectedProps>
+) {
+
   type HocState = {
     readonly count: number;
   };
 
-  return class Hoc extends React.Component<HocProps, HocState> {
+  return class Hoc extends React.Component<AdditionalProps & HocProps, HocState> {
     // Enhance component name for debugging and React-Dev-Tools
     static displayName = `withState(${BaseComponent.name})`;
     // reference to original wrapped component
@@ -547,12 +547,12 @@ export const withState = <BaseProps extends InjectedProps>(
 ```tsx
 import * as React from 'react';
 
-import { withState } from '../hoc';
-import { FCCounter } from '../components';
+import { withState, OutputProps } from '../hoc';
+import { FCCounter, Props as FCCounterProps } from '../components';
 
-const FCCounterWithState = withState(FCCounter);
+const FCCounterWithState = withState<OutputProps<FCCounterProps>>(FCCounter);
 
-export default () => <FCCounterWithState label={'FCCounterWithState'} />;
+export default () => <FCCounterWithState label={'FCCounterWithState'} initialCount={0} />;
 
 ```
 </p></details>
