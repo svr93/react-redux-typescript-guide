@@ -11,17 +11,25 @@ type HocProps = {
   initialCount?: number;
 };
 
-export type OutputProps<WrappedComponentProps> = Omit<WrappedComponentProps, keyof InjectedProps> & HocProps;
+export namespace withState {
+  export type Props<WrappedComponentProps> = Omit<
+    WrappedComponentProps,
+    keyof InjectedProps
+  > &
+    HocProps;
+}
 
 export function withState<AdditionalProps extends Record<string, unknown>>(
   BaseComponent: React.ComponentType<AdditionalProps & InjectedProps>
 ) {
-
   type HocState = {
     readonly count: number;
   };
 
-  return class Hoc extends React.Component<AdditionalProps & HocProps, HocState> {
+  return class Hoc extends React.Component<
+    AdditionalProps & HocProps,
+    HocState
+  > {
     // Enhance component name for debugging and React-Dev-Tools
     static displayName = `withState(${BaseComponent.name})`;
     // reference to original wrapped component
@@ -48,4 +56,4 @@ export function withState<AdditionalProps extends Record<string, unknown>>(
       );
     }
   };
-};
+}

@@ -1,8 +1,10 @@
 import * as React from 'react';
 
-import { withState, OutputProps } from '../hoc';
+import { withState } from '../hoc';
 import { FCCounter, Props as FCCounterProps } from '../components';
 
-const FCCounterWithState = withState<OutputProps<FCCounterProps>>(FCCounter);
+const FCCounterWithState = withState<withState.Props<FCCounterProps>>(
+  FCCounter
+);
 
 export default () => <FCCounterWithState label={'FCCounterWithState'} />;
