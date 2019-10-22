@@ -1,12 +1,14 @@
 import * as React from 'react';
 
-export type Props = {
-  label: string;
-  count: number;
-  onIncrement: () => void;
-};
+export namespace FCCounter {
+  export type Props = {
+    label: string;
+    count: number;
+    onIncrement: () => void;
+  };
+}
 
-export const FCCounter: React.FC<Props> = props => {
+export const FCCounter: React.FC<FCCounter.Props> = props => {
   const { label, count, onIncrement } = props;
 
   const handleIncrement = () => {

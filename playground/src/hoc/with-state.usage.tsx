@@ -1,9 +1,9 @@
 import * as React from 'react';
 
 import { withState } from '../hoc';
-import { FCCounter, Props as FCCounterProps } from '../components';
+import { FCCounter } from '../components';
 
-const FCCounterWithState = withState<withState.Props<FCCounterProps>>(
+const FCCounterWithState = withState<withState.Props<FCCounter.Props>>(
   FCCounter
 );
 
